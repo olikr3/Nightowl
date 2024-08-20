@@ -5,22 +5,22 @@ pub struct BB(u64);
 
 impl BB {
     // check if a specific square is set
-    fn is_square_set(self, square: Square) -> bool {
+    fn is_square_set(&self, square: Square) -> bool {
         self.0 & (1 << square) != 0
     }
 
     // check if bitboard is empty
-    fn is_empty(self) -> bool {
+    fn is_empty(&self) -> bool {
         self.0 == 0
     }
 
     // check if bitboard is singly populated (i.e. exactly one bit is set)
-    fn is_singly_populated(self) -> bool {
+    fn is_singly_populated(&self) -> bool {
         self.0 != 0 && (self.0 & (self.0 - 1)) == 0
     }
 
     // count the number of set bits (Hamming weight)
-    fn pop_count(self) -> usize {
+    fn pop_count(&self) -> usize {
         self.0.count_ones() as usize
     }
 }
