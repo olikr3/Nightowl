@@ -1,14 +1,30 @@
 
-/// represents a single Bitboard
+/// Represents a single Bitboard
 #[derive(Debug, Clone, Copy, Hash)]
-pub struct BB (u64);
+pub struct BB(u64);
 
 impl BB {
+    // check if a specific square is set
+    fn is_square_set(self, square: Square) -> bool {
+        self.0 & (1 << square) != 0
+    }
 
-    fn is_square_set(self, square: Square) -> Bool{
-       False
+    // check if bitboard is empty
+    fn is_empty(self) -> bool {
+        self.0 == 0
+    }
+
+    // check if bitboard is singly populated (i.e. exactly one bit is set)
+    fn is_singly_populated(self) -> bool {
+        self.0 != 0 && (self.0 & (self.0 - 1)) == 0
+    }
+
+    // count the number of set bits (Hamming weight)
+    fn pop_count(self) -> usize {
+        self.0.count_ones() as usize
     }
 }
+
 
 #[derive(Copy, Clone)]
 enum Color {
@@ -37,7 +53,7 @@ pub struct Board {
 
 impl Board {
     
-    //get piece code for piece
+    //return the piece_code mapped to a specific piece
     fn piece_code(&self, pt: Piece_Type) -> usize {
         match pt {
             Piece_Type::nPawn => Piece_Type::nPawn as usize,
@@ -50,7 +66,7 @@ impl Board {
         }
     }
 
-    //get color_codes for piece
+    //return the color_code mapped to a specific piece
     fn color_code(&self, color: Color){
         match color {
             Color::White => Piece_Type::nWhite as usize,
