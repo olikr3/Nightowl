@@ -1,4 +1,5 @@
 
+/// represents a single Bitboard
 #[derive(Debug, Clone, Copy, Hash)]
 pub struct BB (u64);
 
@@ -26,13 +27,16 @@ enum Piece_Type {
     nKing,
 }
 
-pub struct Position {
+
+///a view of a board, represented by bitboards for individual piece types as well as colors.
+pub struct Board {
 
     pieceBB: [BB; 8],
 }
 
-impl Position {
+impl Board {
     
+    //get piece code for piece
     fn piece_code(&self, pt: Piece_Type) -> usize {
         match pt {
             Piece_Type::nPawn => Piece_Type::nPawn as usize,
@@ -44,6 +48,7 @@ impl Position {
         }
     }
 
+    //get color_codes for piece
     fn color_code(&self, color: Color){
         match color {
             Color::White => Piece_Type::nWhite as usize,
@@ -52,6 +57,7 @@ impl Position {
         }
     }
 
+    // return a specific piece set, i.e. an intersection between a color and a piece type
     fn get_piece_set(&self, pt: PieceType, cC: colorCode) -> BB {
         self.pieceBB[Self::piece_code(pt)] & self.pieceBB[Self::color_code(cC)]
     }
