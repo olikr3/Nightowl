@@ -21,6 +21,7 @@ enum Piece_Type {
     nWhite,
     nBlack,
     nPawn,
+    nKnight,
     nBishop,
     nRook,
     nQueen,
@@ -41,6 +42,7 @@ impl Board {
         match pt {
             Piece_Type::nPawn => Piece_Type::nPawn as usize,
             Piece_Type::nBishop => Piece_Type::nBishop as usize,
+            Piece_Type::nKnight => Piece_Type::nKnight as usize,
             Piece_Type::nRook => Piece_Type::nRook as usize,
             Piece_Type::nQueen => Piece_Type::nQueen as usize,
             Piece_Type::nKing => Piece_Type::nKing as usize,
