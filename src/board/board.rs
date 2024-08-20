@@ -91,5 +91,9 @@ impl Board {
     fn get_pawns(&self, ct: Color) -> BB {
         self.pieceBB[Self::piece_code(Piece_Type::nPawn)] & self.piece_bb[Self::color_code]
     }
+
+    fn get_bitboard(pt: Piece_Type) -> BB {
+        self.piece_bb[Self::piece_code(pt)]
+    }
 }
 
