@@ -12,5 +12,5 @@ struct Zobrist {
 }
 
 impl Zobrist {
-    
+    fn new()
 }
