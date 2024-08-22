@@ -69,7 +69,7 @@ impl Zobrist {
         }
 
         // XOR the side to move key
-        if bitboard.side_to_move == Color::Black {
+        if board.side_to_move == Color::Black {
             hash ^= self.side_to_move_key;
         }
 

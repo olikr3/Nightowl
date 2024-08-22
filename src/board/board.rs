@@ -49,6 +49,8 @@ enum Piece_Type {
 pub struct Board {
 
     pieceBB: [BB; 8],
+    side_to_move: Color,
+    castling: Castling,
 }
 
 impl Board {
