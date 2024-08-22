@@ -1,18 +1,22 @@
 
 
 pub struct Move {
-    from: usize,
-    to: usize,
-    flags: usize,
+    from: u64,
+    to: u64,
+    flags: u64,
 }
 
 impl Move {
 
-    fn new(from: usize, to: usize, flags: Option<usize>) -> Self {
+    fn new(from: u64, to: u64, flags: Option<u64>) -> Self {
         Move {
             from,
             to,
             flags,
         }
+    }
+
+    fn make_move(board: &mut Board, mv: Move) -> None {
+        todo!()
     }
 }
