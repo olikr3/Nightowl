@@ -56,14 +56,14 @@ pub struct Board {
 impl Board {
     
     //return the piece_code mapped to a specific piece
-    fn piece_code(&self, pt: Piece_Type) -> usize {
+    fn piece_code(&self, pt: Piece_Type) -> u64 {
         match pt {
-            Piece_Type::nPawn => Piece_Type::nPawn as usize,
-            Piece_Type::nBishop => Piece_Type::nBishop as usize,
-            Piece_Type::nKnight => Piece_Type::nKnight as usize,
-            Piece_Type::nRook => Piece_Type::nRook as usize,
-            Piece_Type::nQueen => Piece_Type::nQueen as usize,
-            Piece_Type::nKing => Piece_Type::nKing as usize,
+            Piece_Type::nPawn => Piece_Type::nPawn as u64,
+            Piece_Type::nBishop => Piece_Type::nBishop as u64,
+            Piece_Type::nKnight => Piece_Type::nKnight as u64,
+            Piece_Type::nRook => Piece_Type::nRook as u64,
+            Piece_Type::nQueen => Piece_Type::nQueen as u64,
+            Piece_Type::nKing => Piece_Type::nKing as u64,
             _ => panic!("Invalid piece type"),
         }
     }
@@ -71,8 +71,8 @@ impl Board {
     //return the color_code mapped to a specific piece
     fn color_code(&self, color: Color){
         match color {
-            Color::White => Piece_Type::nWhite as usize,
-            Color::Black => Piece_Type::nBlack as usize,
+            Color::White => Piece_Type::nWhite as u64,
+            Color::Black => Piece_Type::nBlack as u64,
             _ => panic!("Invalid color"),
         }
     }
