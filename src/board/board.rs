@@ -34,8 +34,8 @@ enum Color {
 
 #[derive(Copy, Clone)]
 enum Piece_Type {
-    nWhite,
-    nBlack,
+    nWhite, // any white piece
+    nBlack, // any black piece
     nPawn,
     nKnight,
     nBishop,
