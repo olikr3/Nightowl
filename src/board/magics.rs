@@ -1,21 +1,15 @@
 
-/// Fancy magics as proposed by Pradu Kannan (see https://www.chessprogramming.org/Magic_Bitboards)
+/// Black magics as proposed by Volker Annuss (see https://www.chessprogramming.org/Magic_Bitboards)
+
+const ATTACK_TABLE_SIZE = 88507;
+
+static mut ATTACK_TABLE: [BB; ATTACK_TABLE_SIZE]
+
 
 #[derive(Debug, Clone, Copy)]
-pub struct Magic {
-    magic: u64,         // The magic number
-    mask: BB,           // Relevant occupancy mask
-    shift: u8,          // Shift to reduce bits
-    attack_table: Vec<BB>, // Precomputed attack bitboards
+pub struct BlackMagic {
+    ptr: &'static [BB], // reference to attack table slice
+    notmask: BB; // for relevant occupancy bits
+    black_magic: bb,
 }
 
-impl Magic {
-    fn new(magic: u64, mask: BB, shift: u8, attack_table: Vec<BB>) -> Self {
-        Self {
-            magic,
-            mask,
-            shift,
-            attack_table,
-        }
-    }
-}
