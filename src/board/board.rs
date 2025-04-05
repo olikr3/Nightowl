@@ -104,5 +104,14 @@ impl Board {
         fp = FenParser::from_string(fen);
         todo!
     }
+
+    fn make_move(mv: Move) -> Self {
+        todo!()
+    }
+
+    fn unmake_move(mv: Move) -> Self {
+
+        todo!()
+    }
 }
 
