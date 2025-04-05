@@ -99,5 +99,10 @@ impl Board {
     fn get_bitboard(pt: Piece_Type) -> BB {
         self.piece_bb[Self::piece_code(pt)]
     }
+
+    fn from_fen(fen: &str) -> Self {
+        fp = FenParser::from_string(fen);
+        todo!
+    }
 }
 
