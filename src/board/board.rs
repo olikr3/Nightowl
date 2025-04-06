@@ -44,15 +44,17 @@ enum Piece_Type {
     nKing,
 }
 
-
+/// the Board struct contains basically all the information that is parsed from
+/// a fen string
 pub struct Board {
 
     pieceBB: [BB; 8], // bitboards for individual piece types as well as colors.
     side_to_move: Color, // Color to move
     castling_rights: u8, // Castling rights flags
     en_passant_square: Option<u8>, // Square where en passant is possible
-    occupied: u64,       // All occupied squares
-    empty: u64,          // All empty squares
+    half_moves: u8,
+    full_moves: u8,
+
 }
 
 impl Board {
