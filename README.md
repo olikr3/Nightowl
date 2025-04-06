@@ -6,6 +6,7 @@ Work in progress.
 
 ## In Progress:
 - Implementation of black magics for sliding piece attacks
+- FEN-Parser
 
 ## Done: 
 - basics of board representation
