@@ -1,6 +1,6 @@
 
 
-/// for now mostly just pseudocode, as some details are still unclear
+/// this struct is responsible for creating boards from FEN-Strings.
 pub struct FenParser {}
 
 impl FenParser {
@@ -34,20 +34,19 @@ impl FenParser {
         // todo: match all strs to correct format
         // todo: write separate constructor in board
         Board {
-            pieceBB: build_bbs(),
+            pieceBB: build_bbs(pieces),
             side_to_move, // todo: match str to color
             castling_rights: castling,
             en_passant_square: en_passant_target_square,
-            // why do i need occupied and empty in board -> todo: go over that
-            half_moves: halfmove_clock,
-            full_moves: fullmove_number,
+            half_moves: halfmove_clock as u8,
+            full_moves: fullmove_number as u8,
 
-        } //todo
+        }
     }
 
     /// build all required biboards for the board struct
     /// a bit tricky
-    fn build_bbs(&'static str pieces) -> [pieceBB] {
+    fn build_bbs(&'static str pcs) -> [pieceBB] {
         
        /// sth like:
        /// build_pawn_bb()
@@ -56,17 +55,17 @@ impl FenParser {
         todo!();
     }
 
-    fn build_pawn_bb(&'static str pieces) -> u64 {}
+    fn build_pawn_bb(&'static str pcs) -> u64 {}
 
-    fn build_knight_bb(&'static str pieces) -> u64 {}
+    fn build_knight_bb(&'static str pcs) -> u64 {}
 
-    fn build_bishop_bb(&'static str pieces) -> u64 {}
+    fn build_bishop_bb(&'static str pcs) -> u64 {}
 
-    fn build_rook_bb(&'static str pieces) -> u64 {}
+    fn build_rook_bb(&'static str pcs) -> u64 {}
 
-    fn build_queen_bb(&'static str pieces) -> u64 {}
+    fn build_queen_bb(&'static str pcs) -> u64 {}
 
-    fn build_king_bb(&'static str pieces) -> u64 {}
+    fn build_king_bb(&'static str pcs) -> u64 {}
 
 
     fn to_color(&'static str color) -> Color {
@@ -75,6 +74,9 @@ impl FenParser {
             "w" => return Color::White,
             _ => return Color::Black,
        }
+    }
+
+    fn is_valid(&'static str fen) -> bool {
     }
 
 }
