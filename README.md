@@ -1,5 +1,6 @@
 # Nightowl
-a leightweight, bitboard-based chess engine written in rust.
+a leightweight, bitboard-based chess engine written in rust, with modularity in
+mind.
 Work in progress.
 
 
