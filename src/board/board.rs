@@ -102,7 +102,8 @@ impl Board {
 
     fn from_fen(fen: &str) -> Self {
         fp = FenParser::from_string(fen);
-        todo!
+        b = fp::build_board(fen);
+        B
     }
 
     fn make_move(mv: Move) -> Self {
