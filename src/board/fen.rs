@@ -32,9 +32,10 @@ impl FenParser {
         let fullmove_number = parts[5].to_string();
 
         // todo: match all strs to correct format
+        // todo: write separate constructor in board
         Board {
-            pieceBB, //todo: write method for that
-            side_to_move: active_color, // todo: match str to color
+            pieceBB: build_bbs(),
+            side_to_move, // todo: match str to color
             castling_rights: castling,
             en_passant_square: en_passant_target_square,
             // why do i need occupied and empty in board -> todo: go over that
@@ -44,15 +45,36 @@ impl FenParser {
         } //todo
     }
 
-    // question to self: should this even be in parser?
     /// build all required biboards for the board struct
+    /// a bit tricky
     fn build_bbs(&'static str pieces) -> [pieceBB] {
+        
+       /// sth like:
+       /// build_pawn_bb()
+       /// build_knight_bb()
+       /// etc.
         todo!();
     }
 
-    fn to_color(&'static str pieces) -> Color {
-        
-        todo!();
+    fn build_pawn_bb(&'static str pieces) -> u64 {}
+
+    fn build_knight_bb(&'static str pieces) -> u64 {}
+
+    fn build_bishop_bb(&'static str pieces) -> u64 {}
+
+    fn build_rook_bb(&'static str pieces) -> u64 {}
+
+    fn build_queen_bb(&'static str pieces) -> u64 {}
+
+    fn build_king_bb(&'static str pieces) -> u64 {}
+
+
+    fn to_color(&'static str color) -> Color {
+       
+       match color {
+            "w" => return Color::White,
+            _ => return Color::Black,
+       }
     }
 
 }
