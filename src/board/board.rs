@@ -68,7 +68,6 @@ impl Board {
             Piece_Type::nRook => Piece_Type::nRook as u64,
             Piece_Type::nQueen => Piece_Type::nQueen as u64,
             Piece_Type::nKing => Piece_Type::nKing as u64,
-            _ => panic!("Invalid piece type"),
         }
     }
 
@@ -77,7 +76,6 @@ impl Board {
         match color {
             Color::White => Piece_Type::nWhite as u64,
             Color::Black => Piece_Type::nBlack as u64,
-            _ => panic!("Invalid color"),
         }
     }
 
@@ -108,8 +106,21 @@ impl Board {
     }
 
     fn make_move(mv: Move) -> Self {
-        todo!()
+        
+        let from = mv.from();
+        let to = mv.to();
+        let flags = mv.flag();
+
+        let mut moved_piece = None;
+        for (i, bb) in self.pieceBB.iter_mut.enumerate() {
+            if bb.is_square_set(from) {
+                moved_piece = Some(i);
+                bb.0 &= (1 << from);
+                break;
+            }
+        }
     }
+
 
     fn unmake_move(mv: Move) -> Self {
 
