@@ -3,7 +3,8 @@ use std::collections::HashMap;
 const CHECKMATE: i32 = 10_000;
 const TRANSPOSITION_TABLE_SIZE: usize = 1_000_000;
 
-pub struct PVSearch {
+/// handles the principle variation search
+pub struct PVSearchHandler {
     transposition_table: HashMap<u64, TranspositionEntry>,
 }
 
@@ -25,7 +26,7 @@ enum Flag {
 impl PVSearch {
 
     pub fn new() -> Self {
-        PVSearch {
+        PVSearchHandler {
             transposition_table:
             HashMap::with_capacity(TRANSPOSITION_TABLE_SIZE),
         }
