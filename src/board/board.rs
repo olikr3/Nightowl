@@ -80,7 +80,7 @@ impl Board {
     }
 
     // return a specific piece set, i.e. an intersection between a color and a piece type
-    fn get_piece_set(&self, pt: PieceType, cC: colorCode) -> BB {
+    fn get_piece_set(&self, pt: Piece_Type, cC: Color) -> BB {
         self.pieceBB[Self::piece_code(pt)] & self.pieceBB[Self::color_code(cC)]
     }
 
@@ -93,16 +93,17 @@ impl Board {
     }
 
     fn get_pawns(&self, ct: Color) -> BB {
-        self.pieceBB[Self::piece_code(Piece_Type::nPawn)] & self.piece_bb[Self::color_code]
+        self.pieceBB[Self::piece_code(Piece_Type::nPawn)] & self.pieceBB[Self::color_code]
     }
 
-    fn get_bitboard(pt: Piece_Type) -> BB {
-        self.piece_bb[Self::piece_code(pt)]
+    fn get_bitboard(&self, pt: Piece_Type) -> BB {
+        self.pieceBB[Self::piece_code(pt)]
     }
 
     fn from_fen(fen: &str) -> Self {
         fp = FenParser::from_string(fen);
-        todo!
+        b = fp::build_board(fen);
+        B
     }
 
     fn make_move(mv: Move) -> Self {
@@ -119,12 +120,87 @@ impl Board {
                 break;
             }
         }
+        if let Some(piece_idx) = moving_piece {
+            self.pieceBB[piece_idx].0 |= 1 << to;
+        }
+
+        // Handle captures
+        if let Some(flag) = flag {
+            if flag.is_capture() {
+                for bb in self.pieceBB.iter_mut() {
+                    if bb.is_square_set(to as u8) {
+                        bb.0 &= !(1 << to);
+                        break;
+                    }
+                }
+            }
+
+            match flag {
+                MoveFlag::DoublePawnPush => {
+                    self.en_passant_square = Some(to as u8);
+                }
+                MoveFlag::EnPassantCapture => {
+                    let ep_capture_square = if self.side_to_move == Color::White { to - 8 } else { to + 8 };
+                    self.pieceBB[self.piece_code(Piece_Type::nPawn) as usize].0 &= !(1 << ep_capture_square);
+                }
+                MoveFlag::KingCastle => {
+                    self.pieceBB[self.piece_code(Piece_Type::nRook) as usize].0 &= !(1 << (to + 1)); // Remove rook from old square
+                    self.pieceBB[self.piece_code(Piece_Type::nRook) as usize].0 |= 1 << (to - 1); // Move rook
+                }
+                MoveFlag::QueenCastle => {
+                    self.pieceBB[self.piece_code(Piece_Type::nRook) as usize].0 &= !(1 << (to - 2));
+                    self.pieceBB[self.piece_code(Piece_Type::nRook) as usize].0 |= 1 << (to + 1);
+                }
+                _ => {}
+            }
+        }
+
+        // Switch turn
+        self.side_to_move = match self.side_to_move {
+            Color::White => Color::Black,
+            Color::Black => Color::White,
+        };
+
+        // Update move counters
+        self.half_moves += 1;
+        if self.side_to_move == Color::White {
+            self.full_moves += 1;
+        }
     }
 
 
     fn unmake_move(mv: Move) -> Self {
 
+        // i am not sure how best to implement this, probabaly i need a structure to preserve the history of moves first
         todo!()
+    }
+
+    pub fn is_king_in_check(&self, color: Color) -> bool {
+        let king_pos = self.get_king_position(color);
+        let opponent_color = match color {
+            Color::White => Color::Black,
+            Color::Black => Color::White,
+        };
+        
+        let mut opponent_moves = MoveList::new();
+        MoveGenerator::generate_pseudo_legal_moves(self, &mut opponent_moves);
+        
+        for mv in opponent_moves.moves {
+            if mv.to() == king_pos {
+                return true;
+            }
+        }
+        false
+    }
+
+    fn get_king_position(&self, color: Color) -> u8 {
+        let king_bb = self.pieceBB[self.piece_code(Piece_Type::nKing) as usize];
+        for i in 0..64 {
+            if king_bb.is_square_set(i) {
+                return i;
+            }
+        }
+        panic!("_");
     }
 }
 

@@ -1,83 +1,105 @@
-
-
-/// this struct is responsible for creating boards from FEN-Strings.
 pub struct FenParser {}
 
 impl FenParser {
-
-    /// creates a Board from a valid FEN-String
-    fn from_string(fen: &str) -> Result<Board, &'static str> {
-        
-        if !isvalid(fen) {
-            return Err("Invalid fen");
+    pub fn from_string(fen: &str) -> Result<Board, &'static str> {
+        if !FenParser::is_valid(fen) {
+            return Err("Invalid FEN");
         }
-        b: Board = Board {
-            todo!()
-        }
-        Ok(b)
+        Ok(FenParser::build_board(fen))
     }
 
+    fn build_board(fen: &str) -> Board {
+        let parts: Vec<&str> = fen.split_whitespace().collect();
+        let pieces = parts[0];
+        let active_color = parts[1];
+        let castling = parts[2];
+        let en_passant = parts[3];
+        let halfmove_clock = parts[4].parse::<u8>().unwrap_or(0);
+        let fullmove_number = parts[5].parse::<u8>().unwrap_or(1);
 
-    /// this functions assumes that the input fen string is valid
-    /// it might make more senst to write an iterator to process the string
-    fn build_board(fen: &'static str) -> Board {
-
-        // naming differences to board struct are atrocious for now
-        let parts = fen.split_whitespace().collect();
-        let pieces = parts[0].to_string(); // need to create the bbs for them
-        let active_color = parts[1].to_string();
-        let castling = parts[2].to_string();
-        let en_passant_target_square = parts[3].to_string();
-        let halfmove_clock = parts[4].to_string();
-        let fullmove_number = parts[5].to_string();
-
-        // todo: match all strs to correct format
-        // todo: write separate constructor in board
         Board {
-            pieceBB: build_bbs(pieces),
-            side_to_move, // todo: match str to color
-            castling_rights: castling,
-            en_passant_square: en_passant_target_square,
-            half_moves: halfmove_clock as u8,
-            full_moves: fullmove_number as u8,
-
+            pieceBB: FenParser::build_bbs(pieces),
+            side_to_move: FenParser::to_color(active_color),
+            castling_rights: FenParser::parse_castling(castling),
+            en_passant_square: FenParser::parse_en_passant(en_passant),
+            half_moves: halfmove_clock,
+            full_moves: fullmove_number,
         }
     }
 
-    /// build all required biboards for the board struct
-    /// a bit tricky
-    fn build_bbs(&'static str pcs) -> [pieceBB] {
-        
-       /// sth like:
-       /// build_pawn_bb()
-       /// build_knight_bb()
-       /// etc.
-        todo!();
+    fn build_bbs(pcs: &str) -> [BB; 8] {
+        let mut pieceBB = [BB(0); 8];
+        let mut rank = 7;
+        let mut file = 0;
+
+        for c in pcs.chars() {
+            if c == '/' {
+                rank -= 1;
+                file = 0;
+            } else if c.is_digit(10) {
+                file += c.to_digit(10).unwrap() as usize;
+            } else {
+                let index = FenParser::piece_to_index(c);
+                pieceBB[index].0 |= 1 << (rank * 8 + file);
+                file += 1;
+            }
+        }
+        pieceBB
     }
 
-    fn build_pawn_bb(&'static str pcs) -> u64 {}
-
-    fn build_knight_bb(&'static str pcs) -> u64 {}
-
-    fn build_bishop_bb(&'static str pcs) -> u64 {}
-
-    fn build_rook_bb(&'static str pcs) -> u64 {}
-
-    fn build_queen_bb(&'static str pcs) -> u64 {}
-
-    fn build_king_bb(&'static str pcs) -> u64 {}
-
-
-    fn to_color(&'static str color) -> Color {
-       
-       match color {
-            "w" => return Color::White,
-            _ => return Color::Black,
-       }
+    fn piece_to_index(piece: char) -> usize {
+        match piece {
+            'P' => 0,
+            'N' => 1,
+            'B' => 2,
+            'R' => 3,
+            'Q' => 4,
+            'K' => 5,
+            'p' => 6,
+            'n' => 7,
+            'b' => 8,
+            'r' => 9,
+            'q' => 10,
+            'k' => 11,
+            _ => panic!("Invalid piece character"),
+        }
     }
 
-    fn is_valid(&'static str fen) -> bool {
+    fn to_color(color: &str) -> Color {
+        match color {
+            "w" => Color::White,
+            "b" => Color::Black,
+            _ => panic!("Invalid color"),
+        }
     }
 
+    fn parse_castling(castling: &str) -> u8 {
+        let mut rights = 0;
+        if castling.contains('K') { rights |= 1; }
+        if castling.contains('Q') { rights |= 2; }
+        if castling.contains('k') { rights |= 4; }
+        if castling.contains('q') { rights |= 8; }
+        rights
+    }
+
+    fn parse_en_passant(en_passant: &str) -> Option<u8> {
+        if en_passant == "-" {
+            None
+        } else {
+            let file = en_passant.chars().nth(0).unwrap() as u8 - b'a';
+            let rank = en_passant.chars().nth(1).unwrap().to_digit(10).unwrap() as u8 - 1;
+            Some(rank * 8 + file)
+        }
+    }
+
+    fn is_valid(fen: &str) -> bool {
+        let parts: Vec<&str> = fen.split_whitespace().collect();
+        parts.len() == 6
+    }
+
+    fn to_fen(board: &Board) -> String {
+        todo!()
+    }
 }
+
 
