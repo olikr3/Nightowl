@@ -96,6 +96,10 @@ impl FenParser {
         let parts: Vec<&str> = fen.split_whitespace().collect();
         parts.len() == 6
     }
+
+    fn to_fen(board: &Board) -> String {
+        todo!()
+    }
 }
 
 
