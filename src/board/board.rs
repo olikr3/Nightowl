@@ -121,7 +121,7 @@ impl Board {
             }
         }
         if let Some(piece_idx) = moving_piece {
-            self.pieceBB[piece_idx].0 |= 1 << to; // Move piece to 'to' square
+            self.pieceBB[piece_idx].0 |= 1 << to;
         }
 
         // Handle captures
@@ -129,13 +129,12 @@ impl Board {
             if flag.is_capture() {
                 for bb in self.pieceBB.iter_mut() {
                     if bb.is_square_set(to as u8) {
-                        bb.0 &= !(1 << to); // Remove captured piece
+                        bb.0 &= !(1 << to);
                         break;
                     }
                 }
             }
 
-            // Handle special moves
             match flag {
                 MoveFlag::DoublePawnPush => {
                     self.en_passant_square = Some(to as u8);
@@ -172,7 +171,36 @@ impl Board {
 
     fn unmake_move(mv: Move) -> Self {
 
+        // i am not sure how best to implement this, probabaly i need a structure to preserve the history of moves first
         todo!()
+    }
+
+    pub fn is_king_in_check(&self, color: Color) -> bool {
+        let king_pos = self.get_king_position(color);
+        let opponent_color = match color {
+            Color::White => Color::Black,
+            Color::Black => Color::White,
+        };
+        
+        let mut opponent_moves = MoveList::new();
+        MoveGenerator::generate_pseudo_legal_moves(self, &mut opponent_moves);
+        
+        for mv in opponent_moves.moves {
+            if mv.to() == king_pos {
+                return true;
+            }
+        }
+        false
+    }
+
+    fn get_king_position(&self, color: Color) -> u8 {
+        let king_bb = self.pieceBB[self.piece_code(Piece_Type::nKing) as usize];
+        for i in 0..64 {
+            if king_bb.is_square_set(i) {
+                return i;
+            }
+        }
+        panic!("_");
     }
 }
 
